@@ -1,0 +1,38 @@
+while True:
+    next_key = window.getch()
+    key = key if next_key == -1 else next_key
+
+    # 뱀의 새로운 머리 위치 설정
+    if key == curses.KEY_DOWN:
+        new_head = [snake[0][0] + 1, snake[0][1]]
+    elif key == curses.KEY_UP:
+        new_head = [snake[0][0] - 1, snake[0][1]]
+    elif key == curses.KEY_LEFT:
+        new_head = [snake[0][0], snake[0][1] - 1]
+    elif key == curses.KEY_RIGHT:
+        new_head = [snake[0][0], snake[0][1] + 1]
+
+    snake.insert(0, new_head)
+
+    # 먹이를 먹었는지 확인
+    if snake[0] == food:
+        food = None
+        while food is None:
+            nf = [
+                random.randint(1, screen_height - 2),
+                random.randint(1, screen_width - 2)
+            ]
+            food = nf if nf not in snake else None
+        window.addch(food[0], food[1], curses.ACS_PI)
+    else:
+        tail = snake.pop()
+        window.addch(tail[0], tail[1], ' ')
+
+    # 게임 종료 조건 확인
+    if (snake[0][0] in [0, screen_height] or
+        snake[0][1] in [0, screen_width] or
+        snake[0] in snake[1:]):
+        curses.endwin()
+        quit()
+
+    window.addch(snake[0][0], snake[0][1], curses.ACS_CKBOARD)
