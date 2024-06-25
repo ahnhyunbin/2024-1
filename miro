@@ -1,0 +1,36 @@
+def main(stdscr):
+    curses.curs_set(0)  # 커서를 숨깁니다.
+    stdscr.clear()
+
+    player_x, player_y = start_x, start_y
+
+    while True:
+        stdscr.clear()
+        for y, row in enumerate(maze):
+            stdscr.addstr(y, 0, row)
+
+        stdscr.addstr(player_y, player_x, "@")  # 플레이어 위치 표시
+        stdscr.refresh()
+
+        key = stdscr.getch()
+
+        if key == curses.KEY_UP:
+            if maze[player_y - 1][player_x] != "#":
+                player_y -= 1
+        elif key == curses.KEY_DOWN:
+            if maze[player_y + 1][player_x] != "#":
+                player_y += 1
+        elif key == curses.KEY_LEFT:
+            if maze[player_y][player_x - 1] != "#":
+                player_x -= 1
+        elif key == curses.KEY_RIGHT:
+            if maze[player_y][player_x + 1] != "#":
+                player_x += 1
+
+        if maze[player_y][player_x] == "E":
+            stdscr.addstr(len(maze) + 1, 0, "You Win!")
+            stdscr.refresh()
+            stdscr.getch()
+            break
+
+curses.wrapper(main)
